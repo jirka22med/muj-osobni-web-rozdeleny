@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Osobní Stránka - Jiřík</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modals.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+</head>
+<body style="visibility: hidden;">
+    <div id="loading-indicator" class="hidden">Načítání...</div>
+
+    <header>
+        <h1 data-editable="header-title">Vítejte na mé osobní stránce!</h1>
+        <p data-editable="header-subtitle">Jiřík a jeho digitální království</p>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-link" data-section="about">O mně</a>
+            <a href="#" class="nav-link" data-section="portfolio">Portfolio</a>
+            <a href="#" class="nav-link" data-section="contacts">Kontakty</a>
+            <a href="#" class="nav-link" data-section="editor">HTML Editor</a>
+            <a href="#" class="nav-link" data-section="saved">Moje HTML kódy</a>
+            <a href="#" class="nav-link" data-section="gallery">Galerie</a>
+            <a href="#" class="nav-link" data-section="links">Odkazy</a>
+            <div id="data-management"></div>
+            <button id="edit-mode-toggle-btn" class="button hidden" onclick="toggleEditMode()">Ukončit editaci</button>
+            <button id="login-button" class="button" onclick="showAuthModal()">Upravit stránku</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <section id="about">
+                <h2 data-editable="about-h2">O mně</h2>
+                <p data-editable="about-intro"><strong>Jiří Med – Milovník techniky a zábavy</strong></p>
+                <div>
+                    <h3 data-editable="about-h3-1">Co rád dělám o volných chvílích:</h3>
+                    <p data-editable="about-text-1"><strong>Hraní počítačových her:</strong> Jsem fanoušek herního světa, kde se rád ponořím do různých virtuálních světů. Ať už je to akce, strategie nebo RPG, počítačové hry mě baví a pomáhají mi vypnout. Herní svět mi dává prostor pro dobrodružství, výzvy a rozvoj strategie.</p>
+                    <p data-editable="about-text-2"><strong>Sledování YouTube videí:</strong> Když zrovna nehraju hry, užívám si sledování videí na YouTube. Zajímají mě herní let’s playe, technické novinky a videa oblíbených vloggerů, která mě inspirují a občas rozesmějí. YouTube je pro mě zábavou i zdrojem nových nápadů.</p>
+                </div>
+                <div>
+                    <h3 data-editable="about-h3-2">Další zájmy:</h3>
+                    <p data-editable="about-text-3"><strong>Star Trek:</strong> Moje vášeň pro sci-fi svět Star Treku je obrovská. Miluju tento seriál i jeho postavy, které mě provázejí už od dětství. Vlastním projekt věnovaný Star Treku, kde kombinuji svou lásku k tomuto univerzu s technickými znalostmi. Futuristické technologie a warpové efekty jsou pro mě fascinující, a dokonce jsem je začlenil do svého webového projektu.</p>
+                    <p data-editable="about-text-4"><strong>Technika a kódování:</strong> Jsem nadšenec do technologií a rád pracuju na různých technických výzvách. Programování a úprava HTML a CSS jsou mojí vášní, protože mě baví vytvářet funkční a esteticky krásné webové stránky. Mám cit pro detail a rád kombinuju moderní design s inovativními funkcemi.</p>
+                </div>
+                <div>
+                    <h3 data-editable="about-h3-3">Styl života:</h3>
+                    <p data-editable="about-text-5">Rád trávím čas u počítače, ať už při hraní, tvorbě webů nebo sledování videí. Miluju barevné LED pásky a osvětlení, které bliká do rytmu hudby, což přináší skvělou atmosféru do mého prostoru. Tato kombinace techniky a estetiky mi dodává inspiraci a vytváří místo, kde se cítím dobře.</p>
+                </div>
+            </section>
+
+            <section id="portfolio">
+                <h2 data-editable="portfolio-h2">Portfolio</h2>
+                <p data-editable="portfolio-intro">V této sekci najdeš ukázky mých projektů a práce, které odrážejí mé zájmy v oblasti technologií. I když nejsem programátor, díky spolupráci s AI, jako je ChatGPT a Claude.AI, se mi podařilo vytvořit tyto projekty, na které jsem pyšný.</p>
+                <div class="portfolio-items" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div class="portfolio-item" data-item-id="star-trek-project" style="background-color: #f9f9f9; padding: 1rem; border-radius: 4px; border: 1px solid #ddd; position: relative;">
+                        <h3 data-editable="portfolio-item-1-title">Star Trek Webový Projekt</h3>
+                        <p data-editable="portfolio-item-1-desc">Tento projekt je věnován mému oblíbenému sci-fi seriálu Star Trek. Díky pomoci od chatbotů ChatGPT a Claude.AI jsem vytvořil interaktivní webovou stránku s animacemi warp pohonu, seznamy postav a klíčovými momenty ze všech sérií. Stránka je responzivní a přizpůsobí se jakémukoli zařízení, což navozuje pocit, jako bys byl přímo ve vesmíru.</p>
+                        <a href="https://jirka22med.github.io/star-trek-universe/" class="button editable-link" data-link-id="star-trek-link" data-editable-link-text="Zobrazit projekt &rarr;"><i class="fas fa-edit edit-icon"></i></a>
+                        <div class="edit-controls hidden">
+                            <button onclick="editPortfolioItem('star-trek-project')">Editovat</button>
+                        </div>
+                    </div>
+                    <div class="portfolio-item" data-item-id="audio-led-project" style="background-color: #f9f9f9; padding: 1rem; border-radius: 4px; border: 1px solid #ddd; position: relative;">
+                        <h3 data-editable="portfolio-item-2-title">Audio a LED projekty</h3>
+                        <p data-editable="portfolio-item-2-desc-1">Tento projekt je skvělým příkladem mého praktického přístupu k technice. Vzal jsem dva reproduktory Lamax Storm 1, které jsem rozebral, a odpojil jsem u nich jeden z malých vnitřních reproduktorů...</p>
+                        <p data-editable="portfolio-item-2-desc-2">Celý systém je postaven na jednoduchém principu: zvukové signály, které normálně pohánějí reproduktory, jsou přesměrovány tak, aby poháněly osvětlení...</p>
+                        <a href="#" class="button editable-link" data-link-id="audio-led-link" data-editable-link-text="Více o projektu &rarr;"><i class="fas fa-edit edit-icon"></i></a>
+                        <div class="edit-controls hidden">
+                            <button onclick="editPortfolioItem('audio-led-project')">Editovat</button>
+                        </div>
+                    </div>
+                    <div class="portfolio-item" data-item-id="web-design-coding" style="background-color: #f9f9f9; padding: 1rem; border-radius: 4px; border: 1px solid #ddd; position: relative;">
+                        <h3 data-editable="portfolio-item-3-title">Webový design a kódování</h3>
+                        <p data-editable="portfolio-item-3-desc">I když se nepovažuji za programátora, díky AI jsem zvládl tvorbu responzivních webových stránek s moderním designem. Mám několik projektů, které využívají HTML, CSS a JavaScript, a které mi pomohla vytvořit umělá inteligence.</p>
+                        <a href="#" class="button editable-link" data-link-id="web-design-link" data-editable-link-text="Prohlédnout si ukázky &rarr;"><i class="fas fa-edit edit-icon"></i></a>
+                        <div class="edit-controls hidden">
+                            <button onclick="editPortfolioItem('web-design-coding')">Editovat</button>
+                        </div>
+                    </div>
+                </div>
+                <button id="add-portfolio-item-btn" class="button hidden">Přidat položku do portfolia</button>
+            </section>
+
+            <section id="contacts">
+                <h2 data-editable="contacts-h2">Kontakty</h2>
+                <p data-editable="contacts-intro">Zde můžete přidat své kontaktní údaje, jako je e-mail, odkazy na sociální sítě (např. Discord, GitHub) nebo jiné způsoby, jak vás mohou lidé oslovit.</p>
+                <div class="contact-details" style="margin-top: 1rem;">
+                    <p><strong>E-mail:</strong> <a href="mailto:tvuj.email@example.com" data-link-id="contact-email" data-editable-link-text="tvuj.email@example.com" class="editable-link"><i class="fas fa-edit edit-icon"></i></a></p>
+                    <p><strong>Discord:</strong> <span data-editable="contact-discord">TvojeJmeno#1234</span></p>
+                </div>
+                <div id="user-id-display" class="hidden">Vaše User ID: <span id="firebase-user-id"></span></div>
+            </section>
+
+            <section id="editor">
+                <h2>HTML Editor</h2>
+                <div class="editor-container">
+                    <div>
+                        <label for="html-editor">HTML Kód:</label>
+                        <textarea id="html-editor" placeholder="Zde pište svůj HTML kód..."></textarea>
+                    </div>
+                    <div>
+                        <label for="html-preview">Náhled:</label>
+                        <iframe id="html-preview"></iframe>
+                    </div>
+                </div>
+                <button id="save-code-btn">Uložit kód</button>
+            </section>
+
+            <section id="saved">
+                <h2>Moje HTML kódy</h2>
+                <div id="saved-codes-list">
+                    <p>Načítání uložených kódů...</p>
+                </div>
+            </section>
+
+            <section id="gallery">
+                <h2>Galerie</h2>
+                <div class="gallery-controls">
+                    <input type="url" id="newImageUrl" placeholder="Vložte URL adresu obrázku...">
+                    <button id="addImageUrlBtn" class="button">Přidat obrázek</button>
+                </div>
+                <div id="gallery-container">
+                    <p>Načítání obrázků...</p>
+                </div>
+            </section>
+
+            <section id="links">
+                <h2>Externí Odkazy</h2>
+                <table id="links-table">
+                    <thead>
+                        <tr>
+                            <th>Ikona</th>
+                            <th>Název odkazu</th>
+                            <th>Adresa URL</th>
+                            <th class="edit-mode-only">Akce</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Odkazy se budou generovat zde -->
+                    </tbody>
+                </table>
+                <button id="add-link-btn" class="button hidden">Přidat odkaz</button>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> <span data-editable="footer-copyright-name">Jiří Med</span>. Všechna práva vyhrazena.</p>
+        <p data-editable="footer-slogan">Inspirováno technologiemi a budoucností.</p>
+    </footer>
+
+    <!-- Modals (stejné jako v původním kódu) -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content">
+            <img id="modal-img" src="" alt="Zvětšený obrázek">
+            <div class="modal-nav">
+                <button id="prev-image-btn" class="button btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                    Předchozí
+                </button>
+                <button id="close-modal-btn" class="button btn-danger">Zavřít</button>
+                <button id="next-image-btn" class="button btn-secondary">
+                    Další
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 5px;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="save-code-modal" class="modal">
+        <div class="modal-content">
+            <h3>Uložit HTML kód</h3>
+            <label for="code-title-input">Název kódu:</label>
+            <input type="text" id="code-title-input" placeholder="Např. Můj úžasný snippet">
+            <div class="modal-buttons">
+                <button id="cancel-save-code-btn" class="button btn-secondary">Zrušit</button>
+                <button id="confirm-save-code-btn" class="button">Uložit</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="alert-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="alert-modal-title">Upozornění</h3>
+            <p id="alert-modal-message"></p>
+            <div class="modal-buttons">
+                <button id="alert-modal-ok-btn" class="button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="confirm-modal-title">Potvrzení</h3>
+            <p id="confirm-modal-message"></p>
+            <div class="modal-buttons">
+                <button id="confirm-modal-cancel-btn" class="button btn-secondary">Zrušit</button>
+                <button id="confirm-modal-ok-btn" class="button btn-danger">Potvrdit</button>
+            </div>
+    </div>
+</div>
+
+<div id="auth-modal" class="modal">
+    <div class="modal-content">
+        <h3>Přihlášení / Registrace</h3>
+        <label for="auth-email">Email:</label>
+        <input type="email" id="auth-email" placeholder="vas.email@example.com">
+        <label for="auth-password">Heslo:</label>
+        <input type="password" id="auth-password" placeholder="********">
+        <div class="modal-buttons">
+            <button id="login-auth-btn" class="button">Přihlásit se</button>
+            <button id="signup-auth-btn" class="button btn-secondary">Registrovat se</button>
+            <button id="cancel-auth-btn" class="button btn-danger">Zrušit</button>
+        </div>
+        <p id="auth-error-message" style="color: red; margin-top: 10px;"></p>
+    </div>
+</div>
+
+<div id="edit-image-modal" class="modal">
+    <div class="modal-content">
+        <h3>Upravit obrázek</h3>
+        <label for="edit-image-url">URL obrázku:</label>
+        <input type="url" id="edit-image-url" placeholder="https://example.com/obrazek.jpg">
+        <label for="edit-image-name">Název obrázku:</label>
+        <input type="text" id="edit-image-name" placeholder="Popis obrázku">
+        <div class="modal-buttons">
+            <button id="cancel-edit-image-btn" class="button btn-secondary">Zrušit</button>
+            <button id="save-edit-image-btn" class="button">Uložit</button>
+        </div>
+    </div>
+</div>
+
+<div id="edit-link-modal" class="modal">
+    <div class="modal-content">
+        <h3>Upravit odkaz</h3>
+        <label for="edit-link-title">Název odkazu:</label>
+        <input type="text" id="edit-link-title" placeholder="Název odkazu">
+        <label for="edit-link-url">URL odkazu:</label>
+        <input type="url" id="edit-link-url" placeholder="https://example.com">
+        <div class="modal-buttons">
+            <button id="cancel-edit-link-btn" class="button btn-secondary">Zrušit</button>
+            <button id="save-edit-link-btn" class="button">Uložit</button>
+        </div>
+    </div>
+</div>
+
+<div id="edit-portfolio-modal" class="modal">
+    <div class="modal-content">
+        <h3>Upravit položku portfolia</h3>
+        <label for="edit-portfolio-title">Název:</label>
+        <input type="text" id="edit-portfolio-title" placeholder="Název projektu">
+        <label for="edit-portfolio-desc-1">Popis 1:</label>
+        <textarea id="edit-portfolio-desc-1" rows="5" placeholder="Popis projektu"></textarea>
+        <label for="edit-portfolio-desc-2">Popis 2 (volitelné):</label>
+        <textarea id="edit-portfolio-desc-2" rows="5" placeholder="Další popis"></textarea>
+        <label for="edit-portfolio-link-text">Text tlačítka odkazu:</label>
+        <input type="text" id="edit-portfolio-link-text" placeholder="Text tlačítka">
+        <label for="edit-portfolio-link-url">URL odkazu:</label>
+        <input type="url" id="edit-portfolio-link-url" placeholder="https://">
+        <div class="modal-buttons">
+            <button id="cancel-edit-portfolio-btn" class="button btn-secondary">Zrušit</button>
+            <button id="save-edit-portfolio-btn" class="button">Uložit</button>
+            <button id="delete-portfolio-btn" class="button btn-danger hidden">Smazat položku</button>
+        </div>
+    </div>
+</div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="javascript.js"></script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrace - Moje Osobní Stránka</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); /* Lehce jiný gradient pro odlišení */
+            margin: 0;
+            color: #333;
+        }
+        .signup-container { /* Přejmenováno z login-container */
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 420px; /* Trochu širší pro případné další pole */
+            text-align: center;
+        }
+        h1 {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            color: #333;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white !important;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .message.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #c53030;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .message.success {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: #2f855a;
+            border: 1px solid rgba(56, 161, 105, 0.3);
+        }
+         .message.info {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .login-link { /* Přejmenováno z signup-link */
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .loading-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>🌟 Vytvořit účet</h1>
+        <form id="signup-form">
+            <div>
+                <label for="email">📧 Email:</label>
+                <input type="email" id="email" name="email" required placeholder="zadej.svuj@email.cz">
+            </div>
+            <div>
+                <label for="password">🔐 Heslo:</label>
+                <input type="password" id="password" name="password" required placeholder="Minimálně 6 znaků">
+            </div>
+            <div>
+                <label for="confirm-password">🔑 Potvrdit heslo:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required placeholder="Zopakuj heslo">
+            </div>
+            <button type="submit">Zaregistrovat se</button>
+        </form>
+        <div id="message-container" class="message" style="display: none;"></div>
+        <div class="login-link">
+            Už máš účet? <a href="login.html">🚀 Přihlásit se</a>
+        </div>
+    </div>
+
+    <script>
+        // Konstanty pro Supabase klienta
+        const SUPABASE_URL = 'https://aknjpurxdbtsxillmqbd.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrbmpwdXJ4ZGJ0c3hpbGxtcWJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxOTEzMzAsImV4cCI6MjA2Mzc2NzMzMH0.otk-74BBM-SwC_zA0WqqcwGVab5lBfrLiyeYOmh4Xio';
+
+        // Funkce pro zobrazení zprávy
+        function showMessage(text, type = 'info') {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.textContent = text;
+                messageContainer.className = `message ${type}`; // Přidá správnou třídu pro styl
+                messageContainer.style.display = 'block';
+            }
+        }
+
+        // Funkce pro skrytí zprávy
+        function hideMessage() {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.display = 'none';
+                messageContainer.textContent = '';
+                messageContainer.className = 'message'; // Reset tříd
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializace registrační stránky...');
+
+            if (typeof window.supabase === 'undefined') {
+                console.error('❌ Supabase knihovna není načtena!');
+                showMessage('Kritická chyba: Knihovna pro registraci se nenačetla. Zkus obnovit stránku! 🔄', 'error');
+                return;
+            }
+            console.log('✅ Supabase knihovna byla úspěšně načtena');
+
+            let supabaseClient;
+            try {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase klient byl úspěšně inicializován');
+            } catch (error) {
+                console.error('❌ Chyba při inicializaci Supabase klienta:', error);
+                showMessage('Chyba při inicializaci databáze. Zkus to později! 😔', 'error');
+                return;
+            }
+
+            const signupForm = document.getElementById('signup-form');
+            if (!signupForm) {
+                console.error('❌ Registrační formulář nebyl nalezen!');
+                showMessage('Chyba stránky: Formulář nebyl nalezen! 🚨', 'error');
+                return;
+            }
+
+            signupForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                hideMessage();
+
+                const email = signupForm.email.value.trim();
+                const password = signupForm.password.value;
+                const confirmPassword = signupForm['confirm-password'].value;
+
+                if (!email || !password || !confirmPassword) {
+                    showMessage('Vyplň prosím všechna pole! 📝', 'error');
+                    return;
+                }
+                if (password.length < 6) {
+                    showMessage('Heslo musí mít alespoň 6 znaků! 📏', 'error');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    showMessage('Hesla se neshodují! 🤦‍♂️', 'error');
+                    return;
+                }
+
+                const submitButton = signupForm.querySelector('button[type="submit"]');
+                const originalButtonText = submitButton.textContent;
+                submitButton.innerHTML = '<span class="loading-indicator"></span>Registruji...';
+                submitButton.disabled = true;
+
+                try {
+                    console.log('🔄 Pokus o registraci uživatele:', email);
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email: email,
+                        password: password,
+                        // Můžeš přidat options, např. pro přesměrování po potvrzení emailu:
+                        // options: {
+                        //   emailRedirectTo: `${window.location.origin}/index.html` // Nebo jiná stránka
+                        // }
+                    });
+
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    console.log('✅ Registrace byla úspěšná (před potvrzením emailu):', data);
+
+                    // V Supabase je defaultně zapnuté potvrzení emailem.
+                    // Uživatel se nebude moci přihlásit, dokud nepotvrdí svůj email.
+                    if (data.user && data.user.identities && data.user.identities.length === 0) {
+                        // Toto může nastat, pokud je uživatel již registrován, ale nepotvrdil email (a auto-confirm je off)
+                        // Nebo pokud je "Confirm email" vypnuto v Supabase a uživatel je rovnou aktivní.
+                        // Pro konzistenci s typickým workflow "Confirm email" zobrazíme zprávu o potvrzení.
+                        showMessage('Účet byl vytvořen! Zkontroluj prosím svůj email a potvrď registraci. Poté se budeš moci přihlásit. ✅📧', 'success');
+                    } else if (data.session) {
+                        // Pokud je "Confirm email" vypnuto, session se vytvoří hned a uživatel je přihlášen.
+                        showMessage('Registrace úspěšná a jsi přihlášen! Přesměrovávám... 🎉', 'success');
+                         setTimeout(() => {
+                            window.location.href = 'index.html'; // Nebo název tvé hlavní stránky
+                        }, 2000);
+                    } else {
+                         // Standardní případ s nutností potvrzení emailu
+                        showMessage('Účet byl vytvořen! Zkontroluj prosím svůj email a potvrď registraci. Poté se budeš moci přihlásit. ✅📧', 'success');
+                    }
+                    signupForm.reset(); // Vyčistíme formulář
+
+                } catch (error) {
+                    console.error('❌ Chyba registrace:', error);
+                    if (error.message.includes('User already registered')) {
+                        showMessage('Tento email je již zaregistrován! Zkus se přihlásit. 🧑‍💻', 'error');
+                    } else if (error.message.includes('Password should be at least 6 characters')) {
+                         showMessage('Heslo musí mít alespoň 6 znaků! 📏', 'error');
+                    } else {
+                        showMessage(`Chyba registrace: ${error.message} 😔`, 'error');
+                    }
+                } finally {
+                    submitButton.textContent = originalButtonText;
+                    submitButton.disabled = false;
+                }
+            });
+            
+            async function checkInitialUser() {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (session && session.user) {
+                        console.log('✅ Uživatel je již přihlášen, přesměrovávám z registrační stránky...');
+                        window.location.href = 'index.html'; // Uprav název tvé hlavní stránky, pokud je jiný
+                    }
+                } catch (error) {
+                    console.error('❌ Chyba při kontrole session na registrační stránce:', error);
+                    // Není třeba zde zobrazovat chybu uživateli, jen logujeme
+                }
+            }
+            checkInitialUser(); // Pokud se přihlášený uživatel dostane na signup.html, přesměrujeme ho
+
+            console.log('🎯 Registrační stránka je připravena!');
+        });
+
+        window.addEventListener('error', function(event) {
+            console.error('❌ Globální chyba na stránce:', event.error || event.message);
+            // showMessage('Došlo k neočekávané chybě na stránce. Zkus obnovit. 🔄', 'error');
+        });
+    </script>
+</body>
+</html>
